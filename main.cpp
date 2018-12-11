@@ -58,7 +58,7 @@ class Casilla_Especial : public Tablero{ //La clase casilla especial define cual
 };
 class Juego : public Casilla_Especial{
 	private:
-	  int turno;
+	  int turno; //turno en 0 quiere decir que puede jugar , turno en 1 que esta en espera por 1 turno , turno en ; espera de dos turnos
 	public:
 		Juego();
 		 void avanzar(int);
@@ -190,7 +190,7 @@ Jugador::~Jugador(){
 int main(){
 	srand(time(NULL));
 	string jug1,jug2;
-	int dados;
+	int dados,tirar,jug;
 	Dado *uno=new Dado();
 	Dado *dos=new Dado();
 	cout<<"Nombre del jugador 1"<<endl;
@@ -200,14 +200,56 @@ int main(){
 		fflush(stdin);
 		getline(cin,jug2);
 	
-	Jugador *player1=new Jugador(jug1,1);
-	Jugador *player2=new Jugador(jug2,2);
+	Jugador *player1=new Jugador(jug1,1); //color 1 ficha azul
+	Jugador *player2=new Jugador(jug2,2); // color 2 ficha roja
 
-  dados=*uno+*dos;
+ 
   cout<<" "<<uno->get_dado()<<endl;
   cout<<" "<<dos->get_dado()<<endl;
+ 
+ do{
+ 
+  cout<<"Que jugador sera el primero en tirar ... jugador 1 presione 1, jugador 2 ... presione 2?"<<endl;
+  	cin>>jug;
+  	if(jug <1 or jug >2){
+  		cout<<" Opcion Invalida, reingrese"<<endl;
+	  }
+	  if(jug==1){
+	  	player1->set_turno(0);
+	  	player2->set_turno(1);
+	  }else if(jug==2){
+	  	player2->set_turno(0);
+	  	player1->set_turno(1);
+	  }
+  	 }while(jug <1 or jug > 2);
+  
 		
 do{
+	if(player1->get_turno()==0&&player2->get_turno()!=0){ //jugador 1 jugara si el jugador 2 no esta en turno
+		cout<<"Ingrese 1 para tirar dados"<<endl;
+				cin>>tirar;
+				if(tirar==1){
+					uno=new Dado();
+					dos =new Dado();
+					 dados=*uno+*dos;
+					 player1->avanzar(dados);
+					 cout<<" "<<player1->get_posicion();
+					 
+			}else{
+					cout<<"No se han tirado los dados"<<endl;
+				}
+		
+		
+		
+	}
+	else if(player1->get_turno()!=0&&player2->get_turno()==0){ //jugador 2 jugara si el jugador 1 no esta en turno
+		
+	}
+	
+	
+	
+	
+	
 	
 }while(player1->completo()!=true&&player2->completo()!=true);
   	
