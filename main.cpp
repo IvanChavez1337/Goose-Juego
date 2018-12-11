@@ -58,7 +58,7 @@ class Casilla_Especial : public Tablero{ //La clase casilla especial define cual
 };
 class Juego : public Casilla_Especial{
 	private:
-	  bool turno;
+	  int turno;
 	public:
 		Juego();
 		 void avanzar(int);
@@ -71,7 +71,8 @@ class Juego : public Casilla_Especial{
 		 void Calavera();
 	 	 void Meta();	
 	     int get_turno();
-	     void set_turno(bool);
+	     bool completo();
+	     void set_turno(int);
 		 
 	     
 };
@@ -83,52 +84,103 @@ void Juego::avanzar(int dado){
 	 Tablero::set_nueva(nuevapos);
 }
 void Juego::Oca(){
-	
-	
-	
+	switch(get_posicion()){
+			case 5:
+				set_nueva(9);
+				break;
+			case 9:
+				set_nueva(14);
+				break;
+			case 14:
+				set_nueva(18);
+				break;
+			case 18:
+				set_nueva(23);
+				break;
+			case 23:
+				set_nueva(27);
+				break;
+			case 27:
+				set_nueva(32);
+				break;
+			case 32:
+				set_nueva(36);
+				break;
+			case 36:
+				set_nueva(41);
+				break;
+			case 41:
+				set_nueva(45);
+				break;
+			case 45:
+				set_nueva(50);
+				break;
+			case 50:
+				set_nueva(54);
+				break;
+			case 54:
+				set_nueva(59);
+				break;
+			case 59:
+		        break;
+		
+	}
+
 }
 void Juego::Puente(){
 	if(get_posicion()==6||get_posicion()==12){
 		set_nueva(19);
-		
+		set_turno(1);
 	}
 }
 void Juego::Posada(){
-	set_turno(false);
+	set_turno(1);
 }
 void Juego::Laberinto(){
-	
+	set_nueva(30);
 }
 void Juego::Carcel(){
-	
+	set_turno(1);
 }
 void Juego::Dices(){
-	
+	if(get_posicion()==26){
+		set_nueva(26);
+	}else if(get_posicion()==53){
+		set_nueva(53);
+	}
 }
 void Juego::Calavera(){
-	
+	set_nueva(1);
 }
 void Juego::Meta(){
-	
+	set_nueva(63);
 }
 int Juego::get_turno(){
 	return turno;
 }
-void Juego::set_turno(bool turn){
+void Juego::set_turno(int turn){
 	turno=turn;
+}
+bool Juego::completo(){
+	if(get_posicion()==63){
+		return true;
+	}
+	else{
+		return false;
+	}
 }
 class Jugador : public Juego{
 	friend reiniciar(Jugador *);
 	private:
 		string nombre;
-		bool ficha;
+		int ficha;
 	public:
-	  Jugador(string,bool);
+	  Jugador(string,int);
 	  ~Jugador();
 	  void Puntaje();		
 	
 };
-Jugador::Jugador(string _nombre,bool _ficha){
+Jugador::Jugador(string _nombre,int  _ficha){
 	nombre=_nombre;
 	ficha=ficha;
 }
@@ -140,7 +192,7 @@ int main(){
 	string jug1,jug2;
 	int dados;
 	Dado *uno=new Dado();
-	Dado *segundo=new Dado();
+	Dado *dos=new Dado();
 	cout<<"Nombre del jugador 1"<<endl;
 	getline(cin,jug1);
 		fflush(stdin);
@@ -148,12 +200,16 @@ int main(){
 		fflush(stdin);
 		getline(cin,jug2);
 	
-	Jugador *player1=new Jugador(jug1,true);
-	Jugador *plyaer2=new Jugador(jug2,false);
+	Jugador *player1=new Jugador(jug1,1);
+	Jugador *player2=new Jugador(jug2,2);
 
-  dados=*uno+*segundo;
+  dados=*uno+*dos;
   cout<<" "<<uno->get_dado()<<endl;
-  cout<<" "<<segundo->get_dado()<<endl;
-  	 cout<<""<<dados;
+  cout<<" "<<dos->get_dado()<<endl;
+		
+do{
+	
+}while(player1->completo()!=true&&player2->completo()!=true);
+  	
 	return 0;
 }
