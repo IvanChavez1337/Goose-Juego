@@ -1,3 +1,4 @@
+
 #include<iostream>
 #include<time.h>
 #include<stdlib.h>
@@ -62,6 +63,7 @@ class Juego : public Casilla_Especial{
 	public:
 		Juego();
 		 void avanzar(int);
+		 void retroceder(int);
 		 void Oca();
 		 void Puente();
 	     void Posada();
@@ -73,15 +75,16 @@ class Juego : public Casilla_Especial{
 	     int get_turno();
 	     bool completo();
 	     void set_turno(int);
+	     bool es_especial(int);
 		 
 	     
 };
 Juego::Juego(){
 }
 void Juego::avanzar(int dado){
-	int pos_ant=Tablero::get_posicion();
+	int pos_ant=get_posicion();
 	 int nuevapos=pos_ant+dado;
-	 Tablero::set_nueva(nuevapos);
+	 set_nueva(nuevapos);
 }
 void Juego::Oca(){
 	switch(get_posicion()){
@@ -121,7 +124,7 @@ void Juego::Oca(){
 			case 54:
 				set_nueva(59);
 				break;
-			case 59:
+			case 59: // aqui se debera poner la si la suma es mayor que 63 restarle y set la posicion al resultado, si es igual a 63 gana, si es menor a 63 solo sumar y set una posicion nueva 
 		        break;
 		
 	}
@@ -145,7 +148,7 @@ void Juego::Carcel(){
 void Juego::Dices(){
 	if(get_posicion()==26){
 		set_nueva(26);
-	}else if(get_posicion()==53){
+	}else if(get_posicion()==53){ // falta validar esta parte ademas que cuando se pase de 63 le reste las posiciones.
 		set_nueva(53);
 	}
 }
@@ -168,6 +171,83 @@ bool Juego::completo(){
 	else{
 		return false;
 	}
+}
+bool Juego::es_especial(int casilla){
+	switch(casilla){
+			case 5:
+				return true;
+				break;
+			case 6:
+				return true;
+				break;
+			case 9:
+				return true;
+				break;
+			case 12:
+				return true;
+				break;
+			case 14:
+				return true;
+				break;
+			case 18:
+				return true;
+				break;
+			case 19:
+				return true;
+				break;
+			case 23:
+				return true;
+				break;
+			case 26:
+				return true;
+				break;
+			case 27:
+				return true;
+				break;
+			case 32:
+				return true;
+				break;
+			case 36:
+				return true;
+				break;
+			case 41:
+				return true;
+				break;
+			case 42:
+				return true;
+				break;
+			case 45:
+				return true;
+				break;
+			case 50:
+				return true;
+				break;
+			case 53:
+				return true;
+				break;
+			case 54:
+				return true;
+				break;
+			case 56:
+				return true;
+				break;
+			case 58:
+				return true;
+				break;
+			case 59:
+				return true;
+		        break;
+		    
+		    default: 
+		          return false;
+		          break;
+	}
+}
+void Juego::retroceder(int casillas){
+	int pos_ant=get_posicion();
+	 int nuevapos=pos_ant-casillas;
+set_nueva(nuevapos);
+	
 }
 class Jugador : public Juego{
 	friend reiniciar(Jugador *);
@@ -231,9 +311,17 @@ do{
 				if(tirar==1){
 					uno=new Dado();
 					dos =new Dado();
-					 dados=*uno+*dos;
+					 dados=*uno+*dos; // poner un boton para inicializar los dados
 					 player1->avanzar(dados);
+					 if(player1->es_especial(player1->get_posicion())==true){
+					 
+					 }else if(player1->es_especial(player1->get_posicion())==false){
+					 	player1->set_turno(1); // termina el turno
+					 }
+					 
+					 
 					 cout<<" "<<player1->get_posicion();
+					 
 					 
 			}else{
 					cout<<"No se han tirado los dados"<<endl;
