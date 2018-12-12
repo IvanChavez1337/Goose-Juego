@@ -266,7 +266,7 @@ Jugador::Jugador(string _nombre,int  _ficha){
 }
 Jugador::~Jugador(){
 }
-
+void seleccion(Jugador *&player);
 int main(){
 	srand(time(NULL));
 	string jug1,jug2;
@@ -313,16 +313,17 @@ do{
 					dos =new Dado();
 					 dados=*uno+*dos; // poner un boton para inicializar los dados
 					 player1->avanzar(dados);
-					 if(player1->es_especial(player1->get_posicion())==true){
-					 
-					 }else if(player1->es_especial(player1->get_posicion())==false){
-					 	player1->set_turno(1); // termina el turno
+					 if(player1->es_especial(player1->get_posicion())==true){ // faltara if que decrementara turno del contrario
+					 				
+									 seleccion(player1); //hacer lo mismo para el jugador 2
+									 }else if(player1->es_especial(player1->get_posicion())==false){
+					 player1->set_turno(1); // termina el turno
 					 }
 					 
 					 
-					 cout<<" "<<player1->get_posicion();
 					 
 					 
+					 cout<<"antes  "<<player1->get_posicion()<<endl;
 			}else{
 					cout<<"No se han tirado los dados"<<endl;
 				}
@@ -331,6 +332,30 @@ do{
 		
 	}
 	else if(player1->get_turno()!=0&&player2->get_turno()==0){ //jugador 2 jugara si el jugador 1 no esta en turno
+			cout<<"Ingrese 1 para tirar dados"<<endl;
+				cin>>tirar;
+				if(tirar==1){
+					uno=new Dado();
+					dos =new Dado();
+					 dados=*uno+*dos; 
+					if(player2->es_especial(player2->get_posicion())==true){ // faltara if que decrementara turno del contrario
+					 				
+									 seleccion(player2); //hacer lo mismo para el jugador 2
+									 }else if(player2->es_especial(player2->get_posicion())==false){
+					 player2->set_turno(1); // termina el turno
+					 }
+					
+					
+					
+					
+					
+				}else {
+					cout<<"No se han tirado los dados"<<endl;
+				}
+		
+		
+		
+		
 		
 	}
 	
@@ -342,4 +367,77 @@ do{
 }while(player1->completo()!=true&&player2->completo()!=true);
   	
 	return 0;
+}
+void seleccion(Jugador *&player){
+	Dado *one=new Dado();
+	Dado *two=new Dado();
+	int dices= *one+*two;
+				switch(player->get_posicion()){
+		
+				case 5:
+				player->Oca();
+				break;
+			case 6:
+				player->Puente();
+				break;
+			case 9:
+				player->Oca();
+				break;
+			case 12:
+				player->Puente();
+				break;
+			case 14:
+				player->Oca();
+				break;
+			case 18:
+				player->Oca();
+				break;
+			case 19:
+				player->Posada();
+				break;
+			case 23:
+				player->Oca();
+				break;
+			case 26:
+				player->Dices();
+				break;
+			case 27:
+				 player->Oca();
+				break;
+			case 32:
+				player->Oca();
+				break;
+			case 36:
+				player->Oca();
+				break;
+			case 41:
+				player->Oca();
+				break;
+			case 42:
+				player->Laberinto();
+				break;
+			case 45:
+				player->Oca();
+				break;
+			case 50:
+				player->Oca();
+				break;
+			case 53:
+				player->Dices();
+				break;
+			case 54:
+				player->Oca();
+				break;
+			case 56:
+				player->Carcel();
+				break;
+			case 58:
+				player->Calavera();
+				break;
+			case 59:
+				 //aqui abra que mandar el dado y hacer un caso especial para retroceder o avanzar dependiendo hacer lo mismo en la clase
+				player->Oca();
+		        break;
+		        		}
+	
 }
