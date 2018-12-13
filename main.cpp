@@ -1,10 +1,10 @@
 #include<iostream>
 #include<time.h>
 #include<stdlib.h>
+#include<fstream>
+#include<ctime>
 //poner global el archivo en la funcion de cada objeto editarlo y al final cerrar el archivo
 using namespace std;
-
-
 
 class Dado // La clase dado genera numeros aleatorios en los dados, ademas se sobrecarga para generar dos dados.
 {   
@@ -124,11 +124,6 @@ Jugador::Jugador(string _nombre, int  _ficha)
 {
 	nombre = _nombre;
 	ficha = _ficha;
-}
-
-Jugador::~Jugador()
-{
-	
 }
 
 void Jugador::avanzar(int dado)
@@ -391,115 +386,153 @@ void Jugador::retroceder(int casillas)
 	set_nueva (nuevapos);
 }
 
-
+Jugador::~Jugador()
+{
+	nombre = " ";
+	turno = 0;
+	ficha = 0;
+}
 
 int main()
 {
+	ofstream records;
+	std::time_t t = std::time(0);   // obtener fecha de hoy
+    std::tm* now = std::localtime(&t);
+	
+	
 	srand(time(NULL));
 	string jug1,jug2;
 	int dados,tirar,jug,tmp,tmp2;
-	Dado *uno=new Dado();
-	Dado *dos=new Dado();
-	cout << "Nombre del jugador 1" << endl;
-	getline(cin,jug1);
-	fflush(stdin);
-	cout << "Nombre del jugador 2" << endl;
-	fflush(stdin);
-	getline(cin,jug2);
-	Jugador *player1 = new Jugador(jug1,1); //color 1 ficha azul
-	Jugador *player2 = new Jugador(jug2,2); // color 2 ficha roja
-  	cout << " " << uno -> get_dado() << endl;
-  	cout << " " << dos -> get_dado() << endl;
-	player1 -> set_turno (0);
-	player2 -> set_turno (1);
-	cout << player1 -> get_posicion() << " " << player2 -> get_posicion() << endl;
+	Jugador *player1, *player2;
 	do
 	{
-		if(player1->get_turno() == 0 && player2 -> get_turno() != 0) //jugador 1 jugara si el jugador 2 no esta en turno
+		cout << "Nombre del jugador 1" << endl;
+		fflush(stdin);
+		getline(cin,jug1);
+		cout << "Nombre del jugador 2" << endl;
+		fflush(stdin);
+		getline(cin,jug2);
+		player1 = new Jugador(jug1,1); //color 1 ficha azul
+		player2 = new Jugador(jug2,2); // color 2 ficha roja
+		player1 -> set_turno (0);
+		player2 -> set_turno (1);
+		Dado *uno=new Dado();
+		Dado *dos=new Dado();
+  		cout << " " << uno -> get_dado() << endl;
+  		cout << " " << dos -> get_dado() << endl;
+		cout << player1 -> get_posicion() << " " << player2 -> get_posicion() << endl;
+		do
 		{
-			cout<<"Ingrese 1 para tirar dados " << player1 -> getname() << endl;
-			cin>>tirar;
-			if(tirar==1)
+			if(player1->get_turno() == 0 && player2 -> get_turno() != 0) //jugador 1 jugara si el jugador 2 no esta en turno
 			{
-				uno=new Dado();
-				dos =new Dado();
-				dados = 4/**uno + *dos*/; // poner un boton para inicializar los dados
-				cout << player1 -> getname() << " Ah sacado " << dados << " Su posicion actual es " << player1 -> get_posicion();
-				player1 -> avanzar (dados);
-				if(player1 -> es_especial (player1 -> get_posicion() ) == true) // faltara if que decrementara turno del contrario
-				{ 
-					cout << " Es una posicion especial";
-					seleccion(player1, player2); //hacer lo mismo para el jugador 2
-				}
-				else if (player2 -> get_turno() == 1)
+				cout<<"Ingrese 1 para tirar dados " << player1 -> getname() << endl;
+				cin>>tirar;
+				if(tirar==1)
 				{
-					player1->set_turno(1); // termina el turno
-					player2 -> set_turno (0);
+					uno=new Dado();
+					dos =new Dado();
+					dados = *uno + *dos; // poner un boton para inicializar los dados
+					cout << player1 -> getname() << " Ah sacado " << dados << " Su posicion actual es " << player1 -> get_posicion();
+					player1 -> avanzar (dados);
+					if(player1 -> es_especial (player1 -> get_posicion() ) == true) // faltara if que decrementara turno del contrario
+					{ 
+						cout << " Es una posicion especial";
+						seleccion(player1, player2); //hacer lo mismo para el jugador 2
+					}
+					else if (player2 -> get_turno() == 1)
+					{
+						player1->set_turno(1); // termina el turno
+						player2 -> set_turno (0);
+					}
+				
+					cout << " Termina en la posicion " << player1 -> get_posicion() << endl;
+				}
+				else
+				{
+					cout<<"No se han tirado los dados"<<endl;
+				}
+				if (player2 -> get_turno () > 1)
+				{
+					cout << "Reduce turno" << player2 -> get_turno ();
+					tmp = player2 -> get_turno ();
+					tmp --;
+					player2 -> set_turno (tmp);
+				}
+			cout << endl;
+			}
+			else if (player1->get_turno() != 0 && player2->get_turno() == 0) //jugador 2 jugara si el jugador 1 no esta en turno
+			{ 
+				cout<<"Ingrese 1 para tirar dados " << player2 -> getname() << endl;
+				cin>>tirar;
+				if(tirar==1)
+				{
+					uno=new Dado();
+					dos =new Dado();
+					dados= *uno + *dos; 
+					cout << player2 -> getname() << " Ah sacado " << dados   << " Su posicion actual es " << player2 -> get_posicion();
+					player2 -> avanzar (dados);
+					if (player2->es_especial(player2->get_posicion())==true) // faltara if que decrementara turno del contrario
+					{
+						cout << " Es una posicion especial";
+						seleccion(player2, player1); //hacer lo mismo para el jugador 2
+					}
+					else if (player1 -> get_turno() == 1)
+					{
+						player1->set_turno(0); // termina el turno
+						player2 -> set_turno (1);
+					}
+					cout << " Termina en la posicion " << player2 -> get_posicion() << endl;
 				}
 				
-				cout << " Termina en la posicion " << player1 -> get_posicion() << endl;
-			}
-			else if (tirar == 9)
-			{
-				reiniciar (player1, player2);
-			}
-			else
-			{
-				cout<<"No se han tirado los dados"<<endl;
-			}
-			if (player2 -> get_turno () > 1)
-			{
-				cout << "Reduce turno" << player2 -> get_turno ();
-				tmp = player2 -> get_turno ();
-				tmp --;
-				player2 -> set_turno (tmp);
-			}
-		cout << endl;
-		}
-		else if (player1->get_turno() != 0 && player2->get_turno() == 0) //jugador 2 jugara si el jugador 1 no esta en turno
-		{ 
-			cout<<"Ingrese 1 para tirar dados " << player2 -> getname() << endl;
-			cin>>tirar;
-			if(tirar==1)
-			{
-				uno=new Dado();
-				dos =new Dado();
-				dados= *uno + *dos; 
-				cout << player2 -> getname() << " Ah sacado " << dados   << " Su posicion actual es " << player2 -> get_posicion();
-				player2 -> avanzar (dados);
-				if (player2->es_especial(player2->get_posicion())==true) // faltara if que decrementara turno del contrario
+				else 
 				{
-					cout << " Es una posicion especial";
-					seleccion(player2, player1); //hacer lo mismo para el jugador 2
-				}
-				else if (player1 -> get_turno() == 1)
+					cout<<"No se han tirado los dados"<<endl;
+				}	
+				if (player1 -> get_turno () > 1)
 				{
-					player1->set_turno(0); // termina el turno
-					player2 -> set_turno (1);
+					cout << "Reduce turno" << player1 -> get_turno ();
+					tmp = player1 -> get_turno ();
+					tmp --;
+					player1 -> set_turno (tmp);
 				}
-				cout << " Termina en la posicion " << player2 -> get_posicion() << endl;
+				cout << endl;
 			}
-			else if (tirar == 9)
-			{
-				player1->set_turno(0); // termina el turno
-				player2 -> set_turno (1);
-				reiniciar (player1, player2);
-			}
-			else 
-			{
-				cout<<"No se han tirado los dados"<<endl;
-			}	
-			if (player1 -> get_turno () > 1)
-			{
-				cout << "Reduce turno" << player1 -> get_turno ();
-				tmp = player1 -> get_turno ();
-				tmp --;
-				player1 -> set_turno (tmp);
-			}
-			cout << endl;
+		}while (player1 -> completo() != true && player2 -> completo() != true);
+		cout << "Juego terminado ";
+		if (player1 -> completo() == true)
+		{//abrir aqui el archivo y poner los nombres
+		   records.open("Records.txt",ios::app);
+		   	if(records.fail()){
+		   		cout<<"Error de archivo"<<endl;
+			   }
+			   records<<"Ganador -> "<<player1->getname()<<" - "<<" Fecha de juego: "<<" - "<<(now->tm_year + 1900) << '-' << (now->tm_mon + 1) << '-'<<  now->tm_mday<<endl;
+			   records<<"Segundo Lugar -> "<<player2->getname()<<" - "<<" Fecha de juego: "<<" - "<<(now->tm_year + 1900) << '-' << (now->tm_mon + 1) << '-'<<  now->tm_mday<<endl;
+			   records.close();
+		
+			cout << player1 -> getname();
 		}
-	}while (player1 -> completo() != true && player2 -> completo() != true);
-  	
+		if (player2 -> completo() == true)
+		{
+			records.open("Records.txt",ios::app);
+		   	if(records.fail()){
+		   		cout<<"Error de archivo"<<endl;
+			   }
+			   records<<"Ganador -> "<<player2->getname()<<" - "<<" Fecha de juego: "<<" - "<<(now->tm_year + 1900) << '-' << (now->tm_mon + 1) << '-'<<  now->tm_mday<<endl;
+			   records<<"Segundo Lugar -> "<<player1->getname()<<" - "<<" Fecha de juego: "<<" - "<<(now->tm_year + 1900) << '-' << (now->tm_mon + 1) << '-'<<  now->tm_mday<<endl;
+			   records.close();
+			cout << player2 -> getname();
+		}
+		cout << " a ganado, ¿Quieren volver a jugar?" << endl << "01 - Si" << endl << "Otro - No" << endl;
+		cin >> tmp2;
+		if (tmp2 == 1)
+		{
+			player1->set_turno(0);
+			player2 -> set_turno (1);
+			reiniciar (player1, player2);
+		}
+	} while (tmp2 == 1);
+	player1 -> ~Jugador ();
+	player2 -> ~Jugador ();
 	return 0;
 }
 
