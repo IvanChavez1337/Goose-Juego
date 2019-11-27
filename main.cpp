@@ -9,7 +9,7 @@ using namespace std;
 class Dado // La clase dado genera numeros aleatorios en los dados, ademas se sobrecarga para generar dos dados.
 {   
 	private:
-		int dice;
+		int dado;
 	public:
 		Dado();
 	    ~Dado();
